@@ -8,7 +8,6 @@ export default function Home() {
   return (
     <div className="container">
       <Header />
-
       {error && <p className="error">{error}</p>}
 
       <div className="books-grid">

@@ -22,8 +22,11 @@ export default function Home() {
     }
   };
 
-  const searchBooks = async () => {
-    if (!query) {
+  const searchBooks = async (searchQuery) => {
+    // Update the local query state
+    setQuery(searchQuery);
+
+    if (!searchQuery) {
       setError("Please enter a search term.");
       setBooks([]);
       return;
@@ -32,7 +35,7 @@ export default function Home() {
     setError("");
 
     try {
-      const res = await fetch(`/api/books?search=${query}`);
+      const res = await fetch(`/api/books?search=${searchQuery}`);
       const data = await res.json();
 
       if (data.length === 0) {
@@ -50,7 +53,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      <Header onSearch={fetchBooks} />
+      <Header onSearch={searchBooks} />
 
       {error && <p className="error">{error}</p>}
 

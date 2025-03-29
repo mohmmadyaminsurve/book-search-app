@@ -1,59 +1,13 @@
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
+import { useSearch } from "../context/SearchContext";
 
 export default function Home() {
-  const [query, setQuery] = useState("");
-  const [books, setBooks] = useState([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
-  const fetchBooks = async () => {
-    try {
-      const res = await fetch("/api/books");
-      const data = await res.json();
-      setBooks(data);
-    } catch (err) {
-      console.error("Error fetching books:", err);
-      setError("Something went wrong.");
-    }
-  };
-
-  const searchBooks = async (searchQuery) => {
-    // Update the local query state
-    setQuery(searchQuery);
-
-    if (!searchQuery) {
-      setError("Please enter a search term.");
-      setBooks([]);
-      return;
-    }
-
-    setError("");
-
-    try {
-      const res = await fetch(`/api/books?search=${searchQuery}`);
-      const data = await res.json();
-
-      if (data.length === 0) {
-        setError("No books found.");
-        setBooks([]);
-      } else {
-        setBooks(data);
-      }
-    } catch (err) {
-      console.error("Error fetching books:", err);
-      setError("Something went wrong.");
-      setBooks([]);
-    }
-  };
+  const { books, error } = useSearch();
 
   return (
     <div className="container">
-      <Header onSearch={searchBooks} />
+      <Header />
 
       {error && <p className="error">{error}</p>}
 

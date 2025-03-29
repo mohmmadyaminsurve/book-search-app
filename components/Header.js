@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useSearch } from "../context/SearchContext";
 
-export default function Header({ onSearch }) {
-  const [query, setQuery] = useState("");
-  const router = useRouter();
+export default function Header() {
+  const { query, setQuery, searchBooks } = useSearch();
 
-  const searchBooks = () => {
-    if (onSearch) {
-      onSearch(query);
-    } else {
-      router.push(`/?search=${query}`);
-    }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    searchBooks(query);
   };
 
   return (
@@ -19,7 +15,7 @@ export default function Header({ onSearch }) {
         <h1 className="title">Book Search</h1>
       </a>
 
-      <div className="search-container">
+      <form className="search-container" onSubmit={handleSearch}>
         <input
           type="text"
           className="search-input"
@@ -27,10 +23,10 @@ export default function Header({ onSearch }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className="search-button" onClick={searchBooks}>
+        <button type="submit" className="search-button">
           Search
         </button>
-      </div>
+      </form>
     </div>
   );
 }
